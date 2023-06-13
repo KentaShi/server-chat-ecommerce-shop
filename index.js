@@ -1,14 +1,8 @@
-const express = require("express")
-const app = express()
-const cors = require("cors")
-const http = require("http")
-const server = http.createServer(app)
-const socketio = require("socket.io")
-const io = socketio(server)
-
-const PORT = process.env.PORT || 8000
-
-app.use(cors({ origin: "*" }))
+const io = require("socket.io")(8000, {
+    cors: {
+        origin: "http://localhost:5000",
+    },
+})
 
 const connectedUsers = {}
 io.on("connection", (socket) => {
@@ -48,8 +42,4 @@ io.on("connection", (socket) => {
         delete connectedUsers[userRole]
         console.log(`${userRole} disconnected`)
     })
-})
-
-server.listen(PORT, () => {
-    console.log("Server Chat is listening on port " + PORT)
 })
